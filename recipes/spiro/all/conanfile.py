@@ -21,6 +21,7 @@ class SpiroConan(ConanFile):
         "shared": False,
         "fPIC": True,
     }
+    build_requires = ["autoconf/2.71", "automake/1.16.4", "libtool/2.4.6"]
 
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake", "cmake_find_package"
@@ -39,11 +40,6 @@ class SpiroConan(ConanFile):
         del self.settings.compiler.cppstd
         if self.settings.os == "Windows":
             del self.options.fPIC
-
-    def build_requirements(self):
-        self.build_requires("autoconf/2.71")
-        self.build_requires("automake/1.16.4")
-        self.build_requires("libtool/2.4.6")
 
     def configure(self):
         if self.options.shared:
