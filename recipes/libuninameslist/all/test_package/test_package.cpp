@@ -1,4 +1,4 @@
-#include <fontforge/fontforge.h>
+#include <uninameslist.h>
 
 int main(int argc, char** argv) {
     // TODO

@@ -173,6 +173,71 @@ index 6a54d4f20..2cdd9d170 100644
          -o "${_output}"
        DEPENDS "${_input}" ${_pofiles}
        VERBATIM
+diff --git a/fontforge/CMakeLists.txt b/fontforge/CMakeLists.txt
+index 67f91605c..6888dc03c 100644
+--- a/fontforge/CMakeLists.txt
++++ b/fontforge/CMakeLists.txt
+@@ -239,6 +239,8 @@ target_link_libraries(fontforge
+     ZLIB::ZLIB
+ )
+ 
++set_target_properties(fontforge PROPERTIES PUBLIC_HEADER "${FONTFORGE_INST_HEADERS}")
++
+ if(APPLE)
+   target_link_libraries(fontforge
+     PRIVATE
+@@ -272,10 +274,8 @@ else()
+ endif()
+ 
+ # No dev package -> no need to install if static
+-if(BUILD_SHARED_LIBS)
+-  if(WIN32 OR CYGWIN)
+-    install(TARGETS fontforge RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-  else()
+-    install(TARGETS fontforge RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-  endif()
++if(WIN32 OR CYGWIN)
++  install(TARGETS fontforge RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++else()
++  install(TARGETS fontforge RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ endif()
+diff --git a/inc/CMakeLists.txt b/inc/CMakeLists.txt
+index b40a6da24..23372b90a 100644
+--- a/inc/CMakeLists.txt
++++ b/inc/CMakeLists.txt
+@@ -23,3 +23,32 @@ target_link_libraries(fontforge_common_headers
+     Gcov::Gcov
+ )
+ endif()
++
++set(FONTFORGE_INST_COMMON_HEADERS
++  basics.h
++  carbon.h
++  chardata.h
++  charset.h
++  dlist.h
++  ffglib.h
++  "${CMAKE_CURRENT_BINARY_DIR}/fontforge-config.h"
++  gdraw.h
++  gfile.h
++  ggadget.h
++  gicons.h
++  gimage.h
++  gio.h
++  gkeysym.h
++  gprogress.h
++  gresedit.h
++  gresource.h
++  gwidget.h
++  gwwiconv.h
++  intl.h
++  ustring.h
++  utype.h
++)
++
++set_target_properties(fontforge_common_headers PROPERTIES PUBLIC_HEADER "${FONTFORGE_INST_COMMON_HEADERS}")
++
++install(TARGETS fontforge_common_headers PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 diff --git a/osx/CMakeLists.txt b/osx/CMakeLists.txt
 index 027a85cd5..a62036409 100644
 --- a/osx/CMakeLists.txt
