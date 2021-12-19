@@ -1,0 +1,168 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5d94d5fc..4af79224 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,7 +2,7 @@ project(poppler)
+ 
+ cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
++set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+ 
+ include(PopplerDefaults)
+ include(PopplerMacros)
+@@ -73,7 +73,7 @@ option(EXTRA_WARN "Enable extra compile warnings" OFF)
+ 
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+-set(TESTDATADIR "${CMAKE_SOURCE_DIR}/../test" CACHE STRING "Specify test data dir.")
++set(TESTDATADIR "${CMAKE_CURRENT_SOURCE_DIR}/../test" CACHE STRING "Specify test data dir.")
+ if(NOT (EXISTS ${TESTDATADIR} AND EXISTS ${TESTDATADIR}/test-poppler.c))
+   message(WARNING "
+  No test data found in $testdatadir.
+@@ -713,7 +713,7 @@ endif()
+ if(ENABLE_GLIB)
+   add_subdirectory(glib)
+ endif()
+-add_subdirectory(test)
++#add_subdirectory(test)
+ if(ENABLE_QT5)
+   add_subdirectory(qt5)
+ endif()
+@@ -809,9 +809,9 @@ endif()
+ set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${POPPLER_VERSION})
+ add_custom_target(dist
+     COMMAND
+-        COMMAND git log --stat | fmt --split-only > ${CMAKE_BINARY_DIR}/ChangeLog
+-        COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar
+-        COMMAND tar -C ${CMAKE_BINARY_DIR} -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar ChangeLog --transform='s,,${ARCHIVE_NAME}/,' --owner root:0 --group root:0
+-        COMMAND tar -C ${CMAKE_BINARY_DIR} -rf ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar glib/reference/html --transform='s,,${ARCHIVE_NAME}/,' --owner root:0 --group root:0
+-        COMMAND xz -9 ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar
+-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
++        COMMAND git log --stat | fmt --split-only > ${CMAKE_CURRENT_BINARY_DIR}/ChangeLog
++        COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD > ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar
++        COMMAND tar -C ${CMAKE_CURRENT_BINARY_DIR} -rf ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar ChangeLog --transform='s,,${ARCHIVE_NAME}/,' --owner root:0 --group root:0
++        COMMAND tar -C ${CMAKE_CURRENT_BINARY_DIR} -rf ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar glib/reference/html --transform='s,,${ARCHIVE_NAME}/,' --owner root:0 --group root:0
++        COMMAND xz -9 ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar
++    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 5d351979..37d03876 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -6,7 +6,7 @@ include_directories(
+ 
+ configure_file(poppler-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/poppler-version.h @ONLY)
+ 
+-add_subdirectory(tests)
++#add_subdirectory(tests)
+ 
+ set(poppler_cpp_SRCS
+   poppler-destination.cpp
+diff --git a/cpp/tests/CMakeLists.txt b/cpp/tests/CMakeLists.txt
+index f5be4213..74e568c8 100644
+--- a/cpp/tests/CMakeLists.txt
++++ b/cpp/tests/CMakeLists.txt
+@@ -2,7 +2,7 @@ include_directories(
+   ${CMAKE_CURRENT_SOURCE_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/..
+   ${CMAKE_CURRENT_BINARY_DIR}/..
+-  ${CMAKE_SOURCE_DIR}/utils
++  ${CMAKE_CURRENT_SOURCE_DIR}/utils
+ )
+ 
+ macro(CPP_ADD_SIMPLETEST exe)
+@@ -17,8 +17,8 @@ macro(CPP_ADD_SIMPLETEST exe)
+   endif()
+ endmacro(CPP_ADD_SIMPLETEST)
+ 
+-cpp_add_simpletest(poppler-dump poppler-dump.cpp ${CMAKE_SOURCE_DIR}/utils/parseargs.cc)
+-cpp_add_simpletest(poppler-render poppler-render.cpp ${CMAKE_SOURCE_DIR}/utils/parseargs.cc)
++cpp_add_simpletest(poppler-dump poppler-dump.cpp ${CMAKE_CURRENT_SOURCE_DIR}/utils/parseargs.cc)
++cpp_add_simpletest(poppler-render poppler-render.cpp ${CMAKE_CURRENT_SOURCE_DIR}/utils/parseargs.cc)
+ 
+ if(ENABLE_FUZZER)
+   cpp_add_simpletest(pdf_fuzzer pdf_fuzzer.cc)
+diff --git a/glib/CMakeLists.txt b/glib/CMakeLists.txt
+index a368eded..01f4ca66 100644
+--- a/glib/CMakeLists.txt
++++ b/glib/CMakeLists.txt
+@@ -82,9 +82,9 @@ set(poppler_glib_SRCS
+ )
+ set(poppler_glib_generated_SRCS
+   ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.c
+-  ${CMAKE_SOURCE_DIR}/poppler/CairoFontEngine.cc
+-  ${CMAKE_SOURCE_DIR}/poppler/CairoOutputDev.cc
+-  ${CMAKE_SOURCE_DIR}/poppler/CairoRescaleBox.cc
++  ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoFontEngine.cc
++  ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoOutputDev.cc
++  ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoRescaleBox.cc
+ )
+ add_library(poppler-glib ${poppler_glib_SRCS} ${poppler_glib_generated_SRCS})
+ set_target_properties(poppler-glib PROPERTIES VERSION 8.17.0 SOVERSION 8)
+@@ -135,7 +135,7 @@ if (HAVE_INTROSPECTION AND BUILD_SHARED_LIBS)
+   set(Poppler_0_18_gir_INCLUDES GObject-2.0 Gio-2.0 cairo-1.0)
+   get_directory_property(_tmp_includes INCLUDE_DIRECTORIES)
+   _list_prefix(_includes _tmp_includes "-I")
+-  set(Poppler_0_18_gir_CFLAGS ${_includes} -L${CMAKE_BINARY_DIR} -L${CMAKE_CURRENT_BINARY_DIR})
++  set(Poppler_0_18_gir_CFLAGS ${_includes} -L${CMAKE_CURRENT_BINARY_DIR} -L${CMAKE_CURRENT_BINARY_DIR})
+   set(Poppler_0_18_gir_LIBS poppler-glib poppler)
+   _list_prefix(_abs_introspection_files introspection_files "${CMAKE_CURRENT_SOURCE_DIR}/")
+   list(APPEND _abs_introspection_files
+diff --git a/glib/reference/CMakeLists.txt b/glib/reference/CMakeLists.txt
+index 15515406..39c59201 100644
+--- a/glib/reference/CMakeLists.txt
++++ b/glib/reference/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ add_custom_command(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/glib-docs-build.stamp
+   DEPENDS poppler-glib
+-  COMMAND ${CMAKE_SOURCE_DIR}/make-glib-api-docs --src-dir=${CMAKE_SOURCE_DIR} --build-dir=${CMAKE_BINARY_DIR}
++  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/make-glib-api-docs --src-dir=${CMAKE_CURRENT_SOURCE_DIR} --build-dir=${CMAKE_CURRENT_BINARY_DIR}
+   COMMAND touch ${CMAKE_CURRENT_BINARY_DIR}/glib-docs-build.stamp
+ )
+ 
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 09b2e67a..a32f7e0e 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -23,8 +23,8 @@ if (GTK_FOUND)
+   )
+ 
+   include_directories(
+-    ${CMAKE_SOURCE_DIR}/glib
+-    ${CMAKE_BINARY_DIR}/glib
++    ${CMAKE_CURRENT_SOURCE_DIR}/glib
++    ${CMAKE_CURRENT_BINARY_DIR}/glib
+   )
+ 
+   set (gtk_splash_test_SRCS
+@@ -37,9 +37,9 @@ if (GTK_FOUND)
+ 
+     set (pdf_inspector_SRCS
+       pdf-inspector.cc
+-      ${CMAKE_SOURCE_DIR}/poppler/CairoFontEngine.cc
+-      ${CMAKE_SOURCE_DIR}/poppler/CairoOutputDev.cc
+-      ${CMAKE_SOURCE_DIR}/poppler/CairoRescaleBox.cc
++      ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoFontEngine.cc
++      ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoOutputDev.cc
++      ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoRescaleBox.cc
+     )
+     poppler_add_test(pdf-inspector BUILD_GTK_TESTS ${pdf_inspector_SRCS})
+     target_link_libraries(pdf-inspector ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${common_libs} ${GTK3_LIBRARIES} poppler)
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 80f54245..9bd130e6 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -23,9 +23,9 @@ if (HAVE_CAIRO)
+   set(pdftocairo_SOURCES ${common_srcs}
+     pdftocairo.cc
+     pdftocairo-win32.cc
+-    ${CMAKE_SOURCE_DIR}/poppler/CairoFontEngine.cc
+-    ${CMAKE_SOURCE_DIR}/poppler/CairoOutputDev.cc
+-    ${CMAKE_SOURCE_DIR}/poppler/CairoRescaleBox.cc
++    ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoFontEngine.cc
++    ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoOutputDev.cc
++    ${CMAKE_CURRENT_SOURCE_DIR}/poppler/CairoRescaleBox.cc
+   )
+   include_directories(
+     ${CMAKE_CURRENT_SOURCE_DIR}

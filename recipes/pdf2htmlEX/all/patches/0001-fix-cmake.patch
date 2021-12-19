@@ -1,0 +1,150 @@
+diff --git a/pdf2htmlEX/CMakeLists.txt b/pdf2htmlEX/CMakeLists.txt
+index b5cb520..62745a1 100644
+--- a/pdf2htmlEX/CMakeLists.txt
++++ b/pdf2htmlEX/CMakeLists.txt
+@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
+ 
+ option(ENABLE_SVG "Enable SVG support, for generating SVG background images and converting Type 3 fonts" ON)
+ 
+-include_directories(${CMAKE_SOURCE_DIR}/src)
++include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+ 
+ # Read/Set Cmake's PDF2HTMLEX_VERSION directly from the shell environment 
+ # variable PDF2HTMLEX_VERSION 
+@@ -18,8 +18,8 @@ set(PDF2HTMLEX_VERSION $ENV{PDF2HTMLEX_VERSION})
+ set(ARCHIVE_NAME pdf2htmlex-${PDF2HTMLEX_VERSION})
+ add_custom_target(dist
+     COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD
+-        | bzip2 > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
+-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
++        | bzip2 > ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
++    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+ find_package(PkgConfig)
+ 
+@@ -39,8 +39,8 @@ include_directories(
+ # located in the main poppler library 
+ #
+ set(POPPLER_LIBRARIES ${POPPLER_LIBRARIES}
+-  ${CMAKE_SOURCE_DIR}/../poppler/build/glib/libpoppler-glib.a
+-  ${CMAKE_SOURCE_DIR}/../poppler/build/libpoppler.a
++  ${CMAKE_CURRENT_SOURCE_DIR}/../poppler/build/glib/libpoppler-glib.a
++  ${CMAKE_CURRENT_SOURCE_DIR}/../poppler/build/libpoppler.a
+ )
+ 
+ 
+@@ -80,7 +80,7 @@ include_directories(
+ include_directories(${FONTFORGE_INCLUDE_DIRS})
+ link_directories(${FONTFORGE_LIBRARY_DIRS})
+ set(FONTFORGE_LIBRARIES ${FONTFORGE_LIBRARIES}
+-  ${CMAKE_SOURCE_DIR}/../fontforge/build/lib/libfontforge.a
++  ${CMAKE_CURRENT_SOURCE_DIR}/../fontforge/build/lib/libfontforge.a
+ )
+ 
+ # If we are using Alpine Linux then we need to add -lintl
+@@ -152,14 +152,14 @@ if(NOT CXX0X_SUPPORT)
+ endif()
+ 
+ 
+-configure_file (${CMAKE_SOURCE_DIR}/src/pdf2htmlEX-config.h.in ${CMAKE_SOURCE_DIR}/src/pdf2htmlEX-config.h)
+-configure_file (${CMAKE_SOURCE_DIR}/pdf2htmlEX.1.in ${CMAKE_SOURCE_DIR}/pdf2htmlEX.1)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/src/pdf2htmlEX-config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/pdf2htmlEX-config.h)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/pdf2htmlEX.1.in ${CMAKE_CURRENT_SOURCE_DIR}/pdf2htmlEX.1)
+ 
+-include(${CMAKE_SOURCE_DIR}/src/css_class_names.cmakelists.txt)
+-configure_file (${CMAKE_SOURCE_DIR}/src/util/css_const.h.in ${CMAKE_SOURCE_DIR}/src/util/css_const.h)
+-configure_file (${CMAKE_SOURCE_DIR}/share/base.css.in ${CMAKE_SOURCE_DIR}/share/base.css)
+-configure_file (${CMAKE_SOURCE_DIR}/share/fancy.css.in ${CMAKE_SOURCE_DIR}/share/fancy.css)
+-configure_file (${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.js.in ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.js)
++include(${CMAKE_CURRENT_SOURCE_DIR}/src/css_class_names.cmakelists.txt)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/src/util/css_const.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/util/css_const.h)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/share/base.css.in ${CMAKE_CURRENT_SOURCE_DIR}/share/base.css)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.css.in ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.css)
++configure_file (${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.js.in ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.js)
+ 
+ set(PDF2HTMLEX_SRC ${PDF2HTMLEX_SRC}
+     src/Param.h
+@@ -228,49 +228,49 @@ add_executable(pdf2htmlEX ${PDF2HTMLEX_SRC})
+ target_link_libraries(pdf2htmlEX ${PDF2HTMLEX_LIBS})
+ 
+ add_custom_target(pdf2htmlEX_resources ALL DEPENDS
+-    ${CMAKE_SOURCE_DIR}/share/base.min.css
+-    ${CMAKE_SOURCE_DIR}/share/fancy.min.css
+-    ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.min.js
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/base.min.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.min.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.min.js
+     )
+ 
+-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.min.js
+-    COMMAND ${CMAKE_SOURCE_DIR}/share/build_js.sh
++add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.min.js
++    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/share/build_js.sh
+     DEPENDS
+-        ${CMAKE_SOURCE_DIR}/share/build_js.sh
+-        ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.js
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/build_js.sh
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.js
+     )
+ 
+ add_custom_command(OUTPUT
+-        ${CMAKE_SOURCE_DIR}/share/base.min.css
+-        ${CMAKE_SOURCE_DIR}/share/fancy.min.css
+-    COMMAND ${CMAKE_SOURCE_DIR}/share/build_css.sh
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/base.min.css
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.min.css
++    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/share/build_css.sh
+     DEPENDS
+-        ${CMAKE_SOURCE_DIR}/share/build_css.sh
+-        ${CMAKE_SOURCE_DIR}/share/base.css
+-        ${CMAKE_SOURCE_DIR}/share/fancy.css
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/build_css.sh
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/base.css
++        ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.css
+     )
+ 
+ install (TARGETS pdf2htmlEX DESTINATION bin)
+ 
+ set(PDF2HTMLEX_RESOURCE
+-    ${CMAKE_SOURCE_DIR}/3rdparty/PDF.js/compatibility.js
+-    ${CMAKE_SOURCE_DIR}/3rdparty/PDF.js/compatibility.min.js
+-    ${CMAKE_SOURCE_DIR}/share/base.css
+-    ${CMAKE_SOURCE_DIR}/share/base.min.css
+-    ${CMAKE_SOURCE_DIR}/share/fancy.css
+-    ${CMAKE_SOURCE_DIR}/share/fancy.min.css
+-    ${CMAKE_SOURCE_DIR}/share/LICENSE
+-    ${CMAKE_SOURCE_DIR}/share/manifest
+-    ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.js
+-    ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX.min.js
+-    ${CMAKE_SOURCE_DIR}/share/pdf2htmlEX-64x64.png
++    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/PDF.js/compatibility.js
++    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/PDF.js/compatibility.min.js
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/base.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/base.min.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/fancy.min.css
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/LICENSE
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/manifest
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.js
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX.min.js
++    ${CMAKE_CURRENT_SOURCE_DIR}/share/pdf2htmlEX-64x64.png
+     )
+ install (FILES ${PDF2HTMLEX_RESOURCE} DESTINATION share/pdf2htmlEX)
+ install (FILES pdf2htmlEX.1 DESTINATION share/man/man1)
+ 
+ ## tests:
+ 
+-set(PDF2HTMLEX_PATH ${CMAKE_BINARY_DIR}/pdf2htmlEX)
++set(PDF2HTMLEX_PATH ${CMAKE_CURRENT_BINARY_DIR}/pdf2htmlEX)
+ set(PDF2HTMLEX_TMPDIR /tmp/pdf2htmlEX/tmp)
+ set(PDF2HTMLEX_DATDIR /tmp/pdf2htmlEX/dat)
+ set(PDF2HTMLEX_PNGDIR /tmp/pdf2htmlEX/png)
+@@ -280,8 +280,3 @@ file(MAKE_DIRECTORY ${PDF2HTMLEX_TMPDIR})
+ file(MAKE_DIRECTORY ${PDF2HTMLEX_DATDIR})
+ file(MAKE_DIRECTORY ${PDF2HTMLEX_PNGDIR})
+ file(MAKE_DIRECTORY ${PDF2HTMLEX_OUTDIR})
+-configure_file(${CMAKE_SOURCE_DIR}/test/test.py.in ${CMAKE_SOURCE_DIR}/test/test.py)
+-
+-include(CTest)
+-add_test(test_basic   python ${CMAKE_SOURCE_DIR}/test/test_output.py)
+-add_test(test_browser python ${CMAKE_SOURCE_DIR}/test/test_local_browser.py)

@@ -21,7 +21,7 @@ class FontForgeConan(ConanFile):
         "shared": False,
         "fPIC": True,
     }
-    requires = ["libjpeg/9d", "libtiff/4.3.0", "libpng/1.6.37", "freetype/2.11.1", "giflib/5.2.1", "libxml2/2.9.12", "pango/1.49.3", "cairo/1.17.4", "spiro/20200505", "libuninameslist/20211114"]
+    requires = ["libjpeg/9d", "libtiff/4.3.0", "libpng/1.6.37", "freetype/2.10.4", "giflib/5.2.1", "libxml2/2.9.12", "pango/1.49.3", "cairo/1.17.4", "spiro/20200505", "libuninameslist/20211114"]
     build_requires = ["gettext/0.21"]
 
     exports_sources = ["CMakeLists.txt", "patches/*"]

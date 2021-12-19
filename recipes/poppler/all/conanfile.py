@@ -35,7 +35,6 @@ class PopplerConan(ConanFile):
         "with_tiff": [True, False],
         "with_libcurl": [True, False],
         "with_zlib": [True, False],
-
     }
     default_options = {
         "shared": False,
@@ -49,7 +48,7 @@ class PopplerConan(ConanFile):
         "with_qt": False,
         "with_gtk": False,
         "with_libiconv": True,
-        "with_openjpeg": True,
+        "with_openjpeg": False,
         "with_lcms": True,
         "with_libjpeg": "libjpeg",
         "with_png": True,

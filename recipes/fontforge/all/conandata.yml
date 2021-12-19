@@ -1,8 +1,14 @@
 sources:
+  "20200314":
+    sha1: cca54440dd47414055507a5007cd9b663699f3e2
+    url: https://github.com/fontforge/fontforge/archive/refs/tags/20200314.tar.gz
   "20201107":
     sha1: c4372106460089c0495558abc8e1d6436d2f9bf2
     url: https://github.com/fontforge/fontforge/archive/refs/tags/20201107.tar.gz
 patches:
+  "20200314":
+    - patch_file: "patches/0001-fix-cmake.patch"
+      base_path: "source_subfolder"
   "20201107":
     - patch_file: "patches/0001-fix-cmake.patch"
       base_path: "source_subfolder"
