@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aee89aa0d..6bd6fb585 100644
+index 556adf96b..e1082866d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,19 +2,19 @@
@@ -7,7 +7,7 @@ index aee89aa0d..6bd6fb585 100644
  cmake_minimum_required(VERSION 3.5)
  
 +# Update the version for each new release
-+project(fontforge VERSION 20201107 LANGUAGES C CXX)
++project(fontforge VERSION 20200314 LANGUAGES C CXX)
 +
  # No in source builds
 -if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -16,15 +16,15 @@ index aee89aa0d..6bd6fb585 100644
  endif()
  
 -# Update the version for each new release
--project(fontforge VERSION 20201107 LANGUAGES C CXX)
+-project(fontforge VERSION 20200314 LANGUAGES C CXX)
 -
  # Add folder for custom cmake modules
 -list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_SOURCE_DIR}/cmake/packages)
 +list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake ${PROJECT_SOURCE_DIR}/cmake/packages)
- if(${CMAKE_VERSION} VERSION_LESS "3.15.7")
+ if(${CMAKE_VERSION} VERSION_LESS "3.14")
    # This could be more targeted, but keep it simple
--  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/backports/3.15.7)
-+  list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/backports/3.15.7)
+-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/backports/3.14.5)
++  list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/backports/3.14.5)
  endif()
  
  # Include any required modules
@@ -59,10 +59,10 @@ index 075b64044..513d33d9f 100644
      VERBATIM
      USES_TERMINAL
 diff --git a/cmake/TargetUtils.cmake b/cmake/TargetUtils.cmake
-index 21b15a6c1..d439a4c99 100644
+index 9bba472ad..3642ff845 100644
 --- a/cmake/TargetUtils.cmake
 +++ b/cmake/TargetUtils.cmake
-@@ -119,12 +119,12 @@ endfunction()
+@@ -118,12 +118,12 @@ endfunction()
  function(add_uninstall_target)
    if(NOT TARGET uninstall)
      configure_file(
@@ -153,12 +153,12 @@ index d6e823c3e..0de9e108d 100644
  foreach(file ${files})
    message(STATUS "Uninstalling $ENV{DESTDIR}${file}")
 diff --git a/desktop/CMakeLists.txt b/desktop/CMakeLists.txt
-index f6b9c9f5a..5c22c287d 100644
+index 6a54d4f20..01f3d0b8d 100644
 --- a/desktop/CMakeLists.txt
 +++ b/desktop/CMakeLists.txt
-@@ -9,9 +9,9 @@ if(UNIX)
-   endforeach()
-   install(FILES "${THEME}/scalable/org.fontforge.FontForge.svg" DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+@@ -16,9 +16,9 @@ if(UNIX)
+     DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps
+   )
  
 -  file(STRINGS "${CMAKE_SOURCE_DIR}/po/LINGUAS" _langs)
 +  file(STRINGS "${PROJECT_SOURCE_DIR}/po/LINGUAS" _langs)
@@ -168,7 +168,7 @@ index f6b9c9f5a..5c22c287d 100644
    endforeach()
  
    macro(msgfmt_desktop_file _mode _file _installdir)
-@@ -20,7 +20,7 @@ if(UNIX)
+@@ -27,7 +27,7 @@ if(UNIX)
      add_custom_command(OUTPUT "${_output}"
        COMMAND "${GETTEXT_MSGFMT_EXECUTABLE}"
          --${_mode} --template "${_input}"
@@ -178,7 +178,7 @@ index f6b9c9f5a..5c22c287d 100644
        DEPENDS "${_input}" ${_pofiles}
        VERBATIM
 diff --git a/osx/CMakeLists.txt b/osx/CMakeLists.txt
-index 0699bd1b9..06829a72e 100644
+index 027a85cd5..6b9459e1b 100644
 --- a/osx/CMakeLists.txt
 +++ b/osx/CMakeLists.txt
 @@ -18,8 +18,8 @@ add_custom_target(macbundle
@@ -186,9 +186,9 @@ index 0699bd1b9..06829a72e 100644
    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_BINARY_DIR}/Info.plist" "FontForge.app/Contents/Info.plist"
    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_BINARY_DIR}/InfoPlist.string" "FontForge.app/Contents/Resources/English.lproj/InfoPlist.string"
 -  COMMAND "${CMAKE_COMMAND}" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/FontForge.app/Contents/Resources/opt/local" -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
--  COMMAND "${CMAKE_SOURCE_DIR}/.github/workflows/scripts/ffosxbuild.sh" "${CMAKE_CURRENT_BINARY_DIR}/FontForge.app" "${FONTFORGE_GIT_VERSION}"
+-  COMMAND "${CMAKE_SOURCE_DIR}/travis-scripts/ffosxbuild.sh" "${CMAKE_CURRENT_BINARY_DIR}/FontForge.app" "${FONTFORGE_GIT_VERSION}"
 +  COMMAND "${CMAKE_COMMAND}" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/FontForge.app/Contents/Resources/opt/local" -P "${PROJECT_BINARY_DIR}/cmake_install.cmake"
-+  COMMAND "${PROJECT_SOURCE_DIR}/.github/workflows/scripts/ffosxbuild.sh" "${CMAKE_CURRENT_BINARY_DIR}/FontForge.app" "${FONTFORGE_GIT_VERSION}"
++  COMMAND "${PROJECT_SOURCE_DIR}/travis-scripts/ffosxbuild.sh" "${CMAKE_CURRENT_BINARY_DIR}/FontForge.app" "${FONTFORGE_GIT_VERSION}"
    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
    VERBATIM
    USES_TERMINAL

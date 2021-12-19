@@ -23,12 +23,12 @@ class Pdf2htmlEXConan(ConanFile):
     }
     requires = [
         # poppler requires
-        #"freetype/2.10.4", "fontconfig/2.13.93", "cairo/1.17.4", "libjpeg/9d", "libpng/1.6.37", "boost/1.76.0", "zlib/1.2.11",
-        "poppler/0.89.0",
+        "freetype/2.10.4", "fontconfig/2.13.93", "cairo/1.17.2", "libjpeg/9d", "libpng/1.6.37", "boost/1.76.0", "zlib/1.2.11",
+        #"poppler/0.89.0",
         # fontforge requires
         "fontforge/20200314",
         # pdf2htmlEX requires
-        "cairo/1.17.4",
+        "cairo/1.17.2",
     ]
 
     exports_sources = ["CMakeLists.txt", "patches/*"]
@@ -53,7 +53,7 @@ class Pdf2htmlEXConan(ConanFile):
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version],
-                  destination=os.path.join(self._source_subfolder, "pdf2htmlEX"), strip_root=True)
+                  destination=self._source_subfolder, strip_root=True)
         for dependency in self.conan_data["dependencies"][self.version]:    
             tools.get(**self.conan_data["dependencies"][self.version][dependency],
                     destination=os.path.join(self._source_subfolder, dependency), strip_root=True)
@@ -67,7 +67,7 @@ class Pdf2htmlEXConan(ConanFile):
             return self._cmake
         self._cmake = CMake(self)
         self._cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        self._cmake.configure(source_folder=os.path.join(self._source_subfolder, "pdf2htmlEX", "pdf2htmlEX"), build_folder=self._build_subfolder)
+        self._cmake.configure(source_folder=os.path.join(self._source_subfolder, "pdf2htmlEX"), build_folder=self._build_subfolder)
         return self._cmake
 
     def _build_poppler(self):
@@ -102,15 +102,17 @@ class Pdf2htmlEXConan(ConanFile):
         cmake.definitions["WITH_Cairo"] = True
         
         cmake.configure(source_folder=os.path.join(self._source_subfolder, "poppler"),
-            build_folder=self._build_subfolder)
+            build_folder=os.path.join(self._source_subfolder, "poppler", "build"))
         cmake.build()
         cmake.install()
 
     def _build_fontforge(self):
         cmake = CMake(self)
+
         cmake.definitions["BUILD_SHARED_LIBS"] = False
+
         cmake.configure(source_folder=os.path.join(self._source_subfolder, "fontforge"),
-            build_folder=os.path.join(self._build_subfolder, "fontforge"))
+            build_folder=os.path.join(self._build_subfolder, "fontforge", "build"))
         cmake.build()
         cmake.install()
 
