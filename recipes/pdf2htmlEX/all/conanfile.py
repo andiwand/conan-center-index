@@ -117,10 +117,11 @@ class Pdf2htmlEXConan(ConanFile):
         cmake.install()
 
     def build(self):
-        #self._build_poppler()
+        self._patch_sources()
+
+        self._build_poppler()
         #self._build_fontforge()
 
-        self._patch_sources()
         cmake = self._configure_cmake()
         cmake.build()
 

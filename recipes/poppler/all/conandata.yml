@@ -10,7 +10,7 @@ sources:
     sha256: "e26ab29f68065de4d6562f0a3e2b5435a83ca92be573b99a1c81998fa286a4d4"
 patches:
   "0.89.0":
-    - patch_file: "patches/0.89/0001-fix-cmake.patch"
+    - patch_file: "patches/0.89/0001-fix-cmake-paths.patch"
       base_path: "source_subfolder"
   "20.09.0":
     - patch_file: "patches/20/0001-cmake-use-PROJECT_SOURCE_DIR-fix-CMAKE_MODULE_PATH.patch"
