@@ -20,15 +20,50 @@ class Pdf2htmlEXConan(ConanFile):
     default_options = {
         "shared": False,
         "fPIC": True,
+
+        "glib:with_mount": False,
+        "glib:with_selinux": False,
+
+        "poppler:shared": False,
+        "poppler:fPIC": True,
+        "poppler:cpp": False,
+        "poppler:fontconfiguration": "fontconfig",
+        "poppler:with_cairo": True,
+        "poppler:splash": True,
+        "poppler:with_glib": True,
+        "poppler:with_gobject_introspection": False,
+        "poppler:with_qt": False,
+        "poppler:with_gtk": False,
+        "poppler:with_openjpeg": False,
+        "poppler:with_lcms": False,
+        "poppler:with_libjpeg": "libjpeg",
+        "poppler:with_png": True,
+        "poppler:with_nss": False,
+        "poppler:with_tiff": False,
+        "poppler:with_libcurl": False,
+        "poppler:with_zlib": True,
+        "poppler:float": False,
+
+        "fontforge:shared": False,
+        "fontforge:fPIC": True,
+        "fontforge:native_scripting": True,
+        "fontforge:python_scripting": False,
+        "fontforge:python_extension": False,
+        "fontforge:with_spiro": False,
+        "fontforge:with_uninameslist": False,
+        "fontforge:with_gif": False,
+        "fontforge:with_jpeg": True,
+        "fontforge:with_png": True,
+        "fontforge:with_readline": False,
+        "fontforge:with_tiff": False,
+        "fontforge:with_woff2": False,
     }
     requires = [
-        # poppler requires
-        "freetype/2.10.4", "fontconfig/2.13.93", "cairo/1.17.2", "libjpeg/9d", "libpng/1.6.37", "boost/1.76.0", "zlib/1.2.11",
-        #"poppler/0.89.0",
-        # fontforge requires
+        "poppler/0.89.0",
         "fontforge/20200314",
-        # pdf2htmlEX requires
         "cairo/1.17.2",
+        "glib/2.65.3",
+        "freetype/2.11.1",
     ]
 
     exports_sources = ["CMakeLists.txt", "patches/*"]
@@ -54,9 +89,6 @@ class Pdf2htmlEXConan(ConanFile):
     def source(self):
         tools.get(**self.conan_data["sources"][self.version],
                   destination=self._source_subfolder, strip_root=True)
-        for dependency in self.conan_data["dependencies"][self.version]:    
-            tools.get(**self.conan_data["dependencies"][self.version][dependency],
-                    destination=os.path.join(self._source_subfolder, dependency), strip_root=True)
 
     def _patch_sources(self):
         for patch in self.conan_data.get("patches", {}).get(self.version, []):
@@ -70,57 +102,8 @@ class Pdf2htmlEXConan(ConanFile):
         self._cmake.configure(source_folder=os.path.join(self._source_subfolder, "pdf2htmlEX"), build_folder=self._build_subfolder)
         return self._cmake
 
-    def _build_poppler(self):
-        cmake = CMake(self)
-
-        cmake.definitions["ENABLE_UNSTABLE_API_ABI_HEADERS"] = False
-        cmake.definitions["BUILD_GTK_TESTS"] = False
-        cmake.definitions["BUILD_QT5_TESTS"] = False
-        cmake.definitions["BUILD_CPP_TESTS"] = False
-        cmake.definitions["ENABLE_SPLASH"] = True
-        cmake.definitions["ENABLE_UTILS"] = False
-        cmake.definitions["ENABLE_CPP"] = False
-        cmake.definitions["ENABLE_GLIB"] = True
-        cmake.definitions["ENABLE_GOBJECT_INTROSPECTION"] = False
-        cmake.definitions["ENABLE_GTK_DOC"] = False
-        cmake.definitions["ENABLE_QT5"] = False
-        cmake.definitions["ENABLE_LIBOPENJPEG"] = "none"
-        cmake.definitions["ENABLE_CMS"] = "none"
-        cmake.definitions["ENABLE_DCTDECODER"] = "libjpeg"
-        cmake.definitions["ENABLE_LIBCURL"] = False
-        cmake.definitions["ENABLE_ZLIB"] = True
-        cmake.definitions["ENABLE_ZLIB_UNCOMPRESS"] = False
-        cmake.definitions["ENABLE_JPEG"] = True
-        cmake.definitions["USE_FLOAT"] = False
-        cmake.definitions["BUILD_SHARED_LIBS"] = False
-        cmake.definitions["RUN_GPERF_IF_PRESENT"] = False
-        cmake.definitions["EXTRA_WARN"] = False
-        cmake.definitions["WITH_JPEG"] = True
-        cmake.definitions["WITH_PNG"] = True
-        cmake.definitions["WITH_TIFF"] = False
-        cmake.definitions["WITH_NSS3"] = False
-        cmake.definitions["WITH_Cairo"] = True
-        
-        cmake.configure(source_folder=os.path.join(self._source_subfolder, "poppler"),
-            build_folder=os.path.join(self._source_subfolder, "poppler", "build"))
-        cmake.build()
-        cmake.install()
-
-    def _build_fontforge(self):
-        cmake = CMake(self)
-
-        cmake.definitions["BUILD_SHARED_LIBS"] = False
-
-        cmake.configure(source_folder=os.path.join(self._source_subfolder, "fontforge"),
-            build_folder=os.path.join(self._build_subfolder, "fontforge", "build"))
-        cmake.build()
-        cmake.install()
-
     def build(self):
         self._patch_sources()
-
-        self._build_poppler()
-        #self._build_fontforge()
 
         cmake = self._configure_cmake()
         cmake.build()

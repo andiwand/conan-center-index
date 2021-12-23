@@ -1,18 +1,4 @@
 sources:
   "0.18.8-rc1":
-    sha1: a115fc5a736b862991c16a5200ff54ebcda0beb1
-    url: https://github.com/pdf2htmlEX/pdf2htmlEX/archive/refs/tags/v0.18.8.rc1.tar.gz
-dependencies:
-  "0.18.8-rc1":
-    poppler:
-      # version 0.89.0
-      sha1: ae9341361b4f7881a808daa2021e53ccc660ae47
-      url: https://github.com/freedesktop/poppler/archive/refs/tags/poppler-0.89.0.tar.gz
-    fontforge:
-      # version 20200314
-      sha1: cca54440dd47414055507a5007cd9b663699f3e2
-      url: https://github.com/fontforge/fontforge/archive/refs/tags/20200314.tar.gz
-patches:
-  "0.18.8-rc1":
-    - patch_file: "patches/0001-fix-cmake-paths.patch"
-      base_path: "source_subfolder"
+    url: https://github.com/opendocument-app/pdf2htmlEX/archive/refs/heads/conan.tar.gz
+patches: []
