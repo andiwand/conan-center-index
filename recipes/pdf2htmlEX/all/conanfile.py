@@ -110,11 +110,15 @@ class Pdf2htmlEXConan(ConanFile):
 
     def package(self):
         self.copy("COPYING", dst="licenses", src=self._source_subfolder)
+        self.copy("*.h", src=os.path.join(self._source_subfolder, "pdf2htmlEX", "src"), dst="include/pdf2htmlEX")
+
         cmake = self._configure_cmake()
         cmake.install()
 
     def package_info(self):
+        self.cpp_info.libs = ["pdf2htmlEX"]
+        self.cpp_info.includedirs.append(os.path.join("include", "pdf2htmlEX"))
+
         self.cpp_info.names["cmake_find_package"] = "pdf2htmlEX"
         self.cpp_info.names["cmake_find_package_multi"] = "pdf2htmlEX"
         self.cpp_info.names["pkgconfig"] = "libpdf2htmlEX"
-        self.cpp_info.libs = ["pdf2htmlEX"]
