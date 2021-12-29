@@ -34,7 +34,7 @@ class Pdf2htmlEXConan(ConanFile):
         "poppler:with_gobject_introspection": False,
         "poppler:with_qt": False,
         "poppler:with_gtk": False,
-        "poppler:with_openjpeg": False,
+        "poppler:with_openjpeg": True,
         "poppler:with_lcms": False,
         "poppler:with_libjpeg": "libjpeg",
         "poppler:with_png": True,

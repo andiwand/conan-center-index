@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5d94d5fc..4af79224 100644
+index 5d94d5fc..5d931986 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,7 +2,7 @@ project(poppler)
@@ -7,7 +7,7 @@ index 5d94d5fc..4af79224 100644
  cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
  
 -set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
-+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
++set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
  
  include(PopplerDefaults)
  include(PopplerMacros)
@@ -83,7 +83,7 @@ index f5be4213..74e568c8 100644
  if(ENABLE_FUZZER)
    cpp_add_simpletest(pdf_fuzzer pdf_fuzzer.cc)
 diff --git a/glib/CMakeLists.txt b/glib/CMakeLists.txt
-index a368eded..01f4ca66 100644
+index a368eded..4fdb3ff1 100644
 --- a/glib/CMakeLists.txt
 +++ b/glib/CMakeLists.txt
 @@ -82,9 +82,9 @@ set(poppler_glib_SRCS
