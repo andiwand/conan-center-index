@@ -84,6 +84,17 @@ class Pdf2htmlEXConan(ConanFile):
         if self.options.shared:
             del self.options.fPIC
 
+        if "with_mount" in self.options["glib"]:
+            self.options["glib"].with_mount = False
+        if "with_selinux" in self.options["glib"]:
+            self.options["glib"].with_selinux = False
+        
+        if "fPIC" in self.options["poppler"]:
+            self.options["poppler"].fPIC = True
+        
+        if "fPIC" in self.options["fontforge"]:
+            self.options["fontforge"].fPIC = True
+
     def source(self):
         tools.get(**self.conan_data["sources"][self.version],
                   destination=self._source_subfolder, strip_root=True)
