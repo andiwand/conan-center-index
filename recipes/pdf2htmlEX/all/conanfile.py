@@ -99,6 +99,7 @@ class Pdf2htmlEXConan(ConanFile):
             return self._cmake
         self._cmake = CMake(self)
         self._cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        self._cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.get_safe("fPIC", True)
         self._cmake.configure(source_folder=os.path.join(self._source_subfolder, "pdf2htmlEX"), build_folder=self._build_subfolder)
         return self._cmake
 
