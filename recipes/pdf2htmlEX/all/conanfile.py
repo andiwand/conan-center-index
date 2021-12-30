@@ -21,10 +21,11 @@ class Pdf2htmlEXConan(ConanFile):
         "shared": False,
         "fPIC": True,
 
-        "glib:with_mount": False,
-        "glib:with_selinux": False,
+        "glib*:with_mount": False,
+        "glib*:with_selinux": False,
 
         "poppler:shared": False,
+        "poppler*:fPIC": True,
         "poppler:cpp": False,
         "poppler:fontconfiguration": "fontconfig",
         "poppler:with_cairo": True,
@@ -44,6 +45,7 @@ class Pdf2htmlEXConan(ConanFile):
         "poppler:float": False,
 
         "fontforge:shared": False,
+        "fontforge*:fPIC": True,
         "fontforge:native_scripting": True,
         "fontforge:python_scripting": False,
         "fontforge:python_extension": False,
@@ -83,17 +85,6 @@ class Pdf2htmlEXConan(ConanFile):
     def configure(self):
         if self.options.shared:
             del self.options.fPIC
-
-        if "with_mount" in self.options["glib"]:
-            self.options["glib"].with_mount = False
-        if "with_selinux" in self.options["glib"]:
-            self.options["glib"].with_selinux = False
-        
-        if "fPIC" in self.options["poppler"]:
-            self.options["poppler"].fPIC = True
-        
-        if "fPIC" in self.options["fontforge"]:
-            self.options["fontforge"].fPIC = True
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version],
