@@ -25,7 +25,6 @@ class Pdf2htmlEXConan(ConanFile):
         "glib:with_selinux": False,
 
         "poppler:shared": False,
-        "poppler:fPIC": True,
         "poppler:cpp": False,
         "poppler:fontconfiguration": "fontconfig",
         "poppler:with_cairo": True,
@@ -45,7 +44,6 @@ class Pdf2htmlEXConan(ConanFile):
         "poppler:float": False,
 
         "fontforge:shared": False,
-        "fontforge:fPIC": True,
         "fontforge:native_scripting": True,
         "fontforge:python_scripting": False,
         "fontforge:python_extension": False,
