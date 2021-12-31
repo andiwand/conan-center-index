@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5d94d5fc..20651cde 100644
+index 5d94d5fc..088436ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,7 +2,7 @@ project(poppler)
@@ -20,6 +20,15 @@ index 5d94d5fc..20651cde 100644
  if(NOT (EXISTS ${TESTDATADIR} AND EXISTS ${TESTDATADIR}/test-poppler.c))
    message(WARNING "
   No test data found in $testdatadir.
+@@ -240,7 +240,7 @@ if(MINGW)
+ endif()
+ if(FONTCONFIG_FOUND)
+   add_definitions(${FONTCONFIG_DEFINITIONS})
+-  include_directories(SYSTEM ${FONTCONFIG_INCLUDE_DIR})
++  include_directories(SYSTEM ${Fontconfig_INCLUDE_DIR})
+ endif()
+ if(WITH_FONTCONFIGURATION_WIN32)
+   if(MINGW)
 @@ -460,12 +460,8 @@ if (ENABLE_NSS3)
    set(poppler_SRCS ${poppler_SRCS}
      poppler/SignatureHandler.cc
