@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5d94d5fc..088436ea 100644
+index 5d94d5fc..a437f18c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,7 +2,7 @@ project(poppler)
@@ -20,6 +20,17 @@ index 5d94d5fc..088436ea 100644
  if(NOT (EXISTS ${TESTDATADIR} AND EXISTS ${TESTDATADIR}/test-poppler.c))
    message(WARNING "
   No test data found in $testdatadir.
+@@ -168,8 +168,8 @@ if(CAIRO_FOUND)
+   set(POPPLER_GLIB_DISABLE_DEPRECATED "")
+   set(POPPLER_GLIB_DISABLE_SINGLE_INCLUDES "")
+   if(ENABLE_GLIB)
+-    macro_optional_find_package(GLIB)
+-    if(NOT GLIB_FOUND)
++    find_package(glib)
++    if(NOT glib_FOUND)
+       set(ENABLE_GLIB OFF)
+     endif()
+   endif()
 @@ -240,7 +240,7 @@ if(MINGW)
  endif()
  if(FONTCONFIG_FOUND)
@@ -107,9 +118,47 @@ index f5be4213..74e568c8 100644
  if(ENABLE_FUZZER)
    cpp_add_simpletest(pdf_fuzzer pdf_fuzzer.cc)
 diff --git a/glib/CMakeLists.txt b/glib/CMakeLists.txt
-index a368eded..b38692b9 100644
+index a368eded..fc055e98 100644
 --- a/glib/CMakeLists.txt
 +++ b/glib/CMakeLists.txt
+@@ -5,12 +5,12 @@ include_directories(
+ 
+ include_directories(
+   SYSTEM
+-  ${GLIB2_INCLUDE_DIRS}
++  ${glib_INCLUDE_DIRS}
+   ${CAIRO_INCLUDE_DIRS}
+ )
+ add_definitions(
+   -DG_LOG_DOMAIN=\"Poppler\"
+-  ${GLIB2_CFLAGS_OTHER}
++  ${glib_CFLAGS_OTHER}
+   ${CAIRO_CFLAGS}
+   ${POPPLER_GLIB_DISABLE_DEPRECATED}
+   ${POPPLER_GLIB_DISABLE_SINGLE_INCLUDES}
+@@ -39,11 +39,11 @@ set(poppler_glib_public_headers
+   poppler-structure-element.h
+ )
+ 
+-find_program(GLIB2_MKENUMS glib-mkenums)
++find_program(glib_MKENUMS glib-mkenums)
+ 
+ add_custom_command(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.h
+-  COMMAND ${GLIB2_MKENUMS}
++  COMMAND ${glib_MKENUMS}
+   ARGS
+     --template poppler-enums.h.template
+     ${poppler_glib_public_headers} > ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.h
+@@ -54,7 +54,7 @@ add_custom_command(
+ 
+ add_custom_command(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.c
+-  COMMAND ${GLIB2_MKENUMS}
++  COMMAND ${glib_MKENUMS}
+   ARGS
+     --template poppler-enums.c.template
+     ${poppler_glib_public_headers} > ${CMAKE_CURRENT_BINARY_DIR}/poppler-enums.c
 @@ -82,9 +82,9 @@ set(poppler_glib_SRCS
  )
  set(poppler_glib_generated_SRCS
@@ -132,7 +181,7 @@ index a368eded..b38692b9 100644
 -else()
 -    target_link_libraries(poppler-glib poppler PkgConfig::GLIB2 ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES})
 -endif()
-+target_link_libraries(poppler-glib poppler ${GLIB2_LIBRARIES} ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES})
++target_link_libraries(poppler-glib poppler ${glib_LIBRARIES} ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES})
  if(CMAKE_USE_PTHREADS_INIT)
     target_link_libraries(poppler-glib Threads::Threads)
  endif()
