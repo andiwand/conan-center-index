@@ -24,6 +24,13 @@ class Pdf2htmlEXConan(ConanFile):
         "glib*:with_mount": False,
         "glib*:with_selinux": False,
 
+        "cairo*:with_xlib": False,
+        "cairo*:with_xlib_xrender": False,
+        "cairo*:with_xcb": False,
+        "cairo*:with_opengl": False,
+
+        "pango*:with_xft": False,
+
         "poppler:shared": False,
         "poppler*:fPIC": True,
         "poppler:cpp": False,
