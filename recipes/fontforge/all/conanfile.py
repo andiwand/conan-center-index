@@ -65,7 +65,6 @@ class FontForgeConan(ConanFile):
             del self.options.fPIC
 
     def requirements(self):
-        "spiro/20200505", "libuninameslist/20211114"
         self.requires("freetype/2.10.4")
         self.requires("libxml2/2.9.12")
         self.requires("pango/1.49.3")
