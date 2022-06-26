@@ -71,6 +71,7 @@ class Pdf2htmlEXConan(ConanFile):
         "cairo/1.17.2",
         "glib/2.65.3",
         "freetype/2.11.1",
+        "zlib/1.2.12",
     ]
 
     exports_sources = ["CMakeLists.txt", "patches/*"]
